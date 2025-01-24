@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: youruser          # Change to your desired username
+      POSTGRES_PASSWORD: yourpassword    # Change to your desired password
+      POSTGRES_DB: yourdb                # Change to your desired database name
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5431:5431"                      # Expose PostgreSQL on port 5432
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile             # Specify the Dockerfile for the Go app
+    restart: always
+    environment:
+      DATABASE_URL: postgres://youruser:yourpassword@db/yourdb?sslmode=disable
+    ports:
+      - "8081:8081"                      # Expose the web app on port 8080
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

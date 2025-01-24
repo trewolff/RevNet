@@ -1,0 +1,26 @@
+/* styles.css */
+
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+}
+
+#messages {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"] {
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+    border-color: #3b82f6; /* Tailwind's blue-500 */
+    outline: none;
+}
