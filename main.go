@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/websocket"
@@ -32,7 +33,13 @@ type Message struct {
 // Initialize the database connection
 func initDB() {
 	var err error
-	dsn := "user=youruser password=yourpassword dbname=yourdb host=db port=5431 sslmode=disable" // Update with your DB credentials
+	dsn := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable",
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_NAME"),
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_PORT"),
+	)
 	db, err = sqlx.Connect("postgres", dsn)
 	if err != nil {
 		log.Fatalln(err)
@@ -100,12 +107,13 @@ func getUsersHandler(w http.ResponseWriter, r *http.Request) {
 
 // Main function
 func main() {
+	fmt.Println("Starting app")
 	initDB()
 	defer db.Close()
-
 	http.HandleFunc("/ws", wsHandler)
 	http.Handle("/api/users", jwtMiddleware(http.HandlerFunc(getUsersHandler)))
 
+	fmt.Println("Starting server")
 	// Serve static files (HTML, CSS)
 	http.Handle("/", http.FileServer(http.Dir("./static"))) // Place your HTML and CSS in the static directory
 

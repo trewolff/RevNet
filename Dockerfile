@@ -20,6 +20,9 @@ RUN chmod +x main
 # Start a new stage from scratch
 FROM alpine:latest
 
+# Install glibc
+RUN apk add --no-cache libc6-compat
+
 # Set the Current Working Directory inside the container
 WORKDIR /root/
 

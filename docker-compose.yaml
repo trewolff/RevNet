@@ -5,13 +5,13 @@ services:
     image: postgres:13
     restart: always
     environment:
-      POSTGRES_USER: youruser          # Change to your desired username
-      POSTGRES_PASSWORD: yourpassword    # Change to your desired password
-      POSTGRES_DB: yourdb                # Change to your desired database name
+      - POSTGRES_USER=your_db_user
+      - POSTGRES_PASSWORD=your_db_password
+      - POSTGRES_DB=your_db_name
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5431:5431"                      # Expose PostgreSQL on port 5432
+      - "5432:5432"                      # Expose PostgreSQL on port 5432
 
   web:
     build:
@@ -19,7 +19,12 @@ services:
       dockerfile: Dockerfile             # Specify the Dockerfile for the Go app
     restart: always
     environment:
-      DATABASE_URL: postgres://youruser:yourpassword@db/yourdb?sslmode=disable
+      - DATABASE_URL=postgres://youruser:yourpassword@db/yourdb?sslmode=disable
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=your_db_user
+      - DB_PASSWORD=your_db_password
+      - DB_NAME=your_db_name
     ports:
       - "8081:8081"                      # Expose the web app on port 8080
     depends_on:
